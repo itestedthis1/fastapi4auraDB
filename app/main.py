@@ -10,11 +10,7 @@ async def root():
 
 
 @app.get("/stoics")
-async def root():
-    return {
-
-@app.get("/")
-async def root():
+async def stoics():
     return {[
         ["Waste no more time arguing what a good man should be. Be One.", " Marcus Aurelius"],
 

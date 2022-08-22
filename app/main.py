@@ -1,7 +1,20 @@
-from fastapi import FastAPI
+from urllib import response
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import Optional, List
+Philo_list = []
+  
 
+class Philosophers(BaseModel):
+    """Represents a philosopher."""
+    name: str
+    time: str
+    nationality: str
+ 
 app = FastAPI()
 
+Philo_list = [{"name":"Su, Lao", "nationality":"Chinese", "time":"6th BC"},{"name":"Epititus","nationality": "Greek","time": "3rd BC"},{"name":"Watts, Alan", "nationality":"English","time": '20th'}]
+   
 
 @app.get("/")
 async def root():
@@ -35,3 +48,21 @@ async def stoics():
             "qt_20": {"qt": "Luck is what happens when preparation meets opportunity.", "qtr":"Seneca"}
         }"""
     }
+    
+       
+@app.get("/philosophers/", response_model = List[Philosophers])
+async def philosophers():
+    return Philo_list
+
+@app.post("/philospers/")
+async def philospers(philo: Philosophers):
+    Philo_list.append(philo)    
+    return philo
+
+@app.get('/philosophers/{name}')
+async def get_philosopher(name: int):
+    
+    try:
+        return Philo_list[name]
+    except:
+        raise HTTPException(status_code=404, detail= f"Philosopher {name} Not Found")

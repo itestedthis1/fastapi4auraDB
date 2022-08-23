@@ -3,7 +3,15 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List
 Philo_list = []
-  
+
+class Users(BaseModel):
+    user_id: int
+    name : str
+    location: str
+    ageRef : int
+    bio : str
+    roles: int
+    password : str
 
 class Philosophers(BaseModel):
     """Represents a philosopher."""
@@ -66,3 +74,20 @@ async def get_philosopher(name: int):
         return Philo_list[name]
     except:
         raise HTTPException(status_code=404, detail= f"Philosopher {name} Not Found")
+
+
+
+      
+
+
+User_list = []
+
+@app.post("/users/")
+async def set_user(user: Users):
+    print(f"user: {user}")
+    User_list.append(user)    
+    return User_list
+
+@app.get("/users/", response_model = List[Users])
+async def get_users():
+    return User_list

@@ -3,7 +3,15 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List
 Philo_list = []
-  
+
+class Users(BaseModel):
+    user_id: int
+    name : str
+    location: str
+    ageRef : int
+    bio : str
+    roles: int
+    password : str
 
 class Philosophers(BaseModel):
     """Represents a philosopher."""
@@ -13,7 +21,7 @@ class Philosophers(BaseModel):
  
 app = FastAPI()
 
-Philo_list = [{"name":"Su, Lao", "nationality":"Chinese", "time":"6th BC"},{"name":"Epititus","nationality": "Greek","time": "3rd BC"},{"name":"Watts, Alan", "nationality":"English","time": '20th'}]
+Philo_list = [{"name":"Su, Lao", "nationality":"Chinese", "time":"6th BC"},{"name":"Epititus","nationality": "Greek","time": "3rd BC"},{"name":"Watts, Alan", "nationality":"English","time": "20th"}]
    
 
 @app.get("/")
@@ -59,10 +67,27 @@ async def philospers(philo: Philosophers):
     Philo_list.append(philo)    
     return philo
 
-@app.get('/philosophers/{name}')
+@app.get("/philosophers/{name}")
 async def get_philosopher(name: int):
     
     try:
         return Philo_list[name]
     except:
         raise HTTPException(status_code=404, detail= f"Philosopher {name} Not Found")
+
+
+
+      
+
+
+User_list = [{"name": "Spanarchian", "location": "Prontypridd", "password": "Pa55w0rd", "user_id": 1, "ageRef": 6, "bio": "This is all about me.", "roles": 1}, {"name": "SouthcoastPY", "location": "Bournemouth", "password": "Pa55w0rd", "user_id": 2, "ageRef": 7, "bio": "This is all about me.", "roles": 1}, {"name": "Itestedthis1", "location": "Dorchester", "password": "Pa55w0rd", "user_id": 3, "ageRef": 7, "bio": "This is all about me.", "roles": 2}, {"name": "Franwan", "location": "Treforest", "password": "Pa55w0rd", "user_id": 4, "ageRef": 2, "bio": "This is all about me.", "roles": 3}, {"name": "Lawry", "location": "Poole", "password": "Pa55w0rd", "user_id": 5, "ageRef": 6, "bio": "This is all about me.", "roles": 4}, {"name": "Fiona", "location": "Devon", "password": "Pa55w0rd", "user_id": 6, "ageRef": 7, "bio": "This is all about me.", "roles": 5}, {"name": "Paul", "location": "Devon", "password": "Pa55w0rd", "user_id": 7, "ageRef": 6, "bio": "This is all about me.", "roles": 2}, {"name": "Steven", "location": "Plymouth", "password": "Pa55w0rd", "user_id": 8, "ageRef": 5, "bio": "This is all about me.", "roles": 3}, {"name": "Leonard", "location": "Norwich", "password": "Pa55w0rd", "user_id": 9, "ageRef": 9, "bio": "This is all about me.", "roles": 4}, {"name": "Nigel", "location": "Bournemouth", "password": "Pa55w0rd", "user_id": 10, "ageRef": 6, "bio": "This is all about me.", "roles": 5}]
+
+@app.post("/users/")
+async def set_user(user: Users):
+    print(f"user: {user}")
+    User_list.append(user)    
+    return User_list
+
+@app.get("/users/", response_model = List[Users])
+async def get_users():
+    return User_list
